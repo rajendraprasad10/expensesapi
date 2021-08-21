@@ -9,4 +9,4 @@ class TestView1(TestView):
     def test_get_expenses_data(self):
         res = self.client.get(self.get_expenses_url, format='json')
         print(res.data)
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 401)
