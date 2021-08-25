@@ -6,7 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, DjangoUnicodeDecodeError, smart_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
@@ -36,28 +36,34 @@ class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=6)
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     username = serializers.CharField(max_length=255, min_length=30, read_only=True)
-    tokens = serializers.CharField(max_length=68, read_only=True)
+    tokens = serializers.SerializerMethodField()
+
+    def get_tokens(self, obj):
+        user = User.objects.get(email=obj['email'])
+
+        return {
+            'access' : user.tokens()['access'],
+            'refresh' : user.tokens()['refresh'],
+            
+        }
 
     class Meta:
         model = User
         fields = ['email', 'password', 'username', 'tokens']
     
-    def validate(self, attrs):
-        email = attrs.get('email', '')
-        password = attrs.get('password', '')
-        user = auth.authenticate(email=email, password=password)
-        if not user:
-            raise AuthenticationFailed("Invalid creadintials try again")  
-        if not user.is_active:
-            raise AuthenticationFailed("Account disabled, contact admin")  
-        if not user.is_verified:
-            raise AuthenticationFailed("Email is not verified")
-                    
-        return {
-            'email' : user.email,
-            'username' : user.username,
-            'tokens' : user.tokens
-        }
+    # def validate(self, attrs):
+    #     email = attrs.get('email', '')
+    #     password = attrs.get('password', '')
+    #     user = auth.authenticate(email=email, password=password)
+    
+    #     if not user:
+    #         raise AuthenticationFailed("Invalid creadintials try again")  
+    #     if not user.is_active:
+    #         raise AuthenticationFailed("Account disabled, contact admin")  
+    #     if not user.is_verified:
+    #         raise AuthenticationFailed("Email is not verified")
+
+   
 
 
 class ResetPasswordEmailSerializer(serializers.Serializer):
@@ -95,4 +101,16 @@ class SetNewPasswordSerializer(serializers.Serializer):
             raise AuthenticationFailed(" The reset link is invalid", 401)
         return super().validate(attrs)
         
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
 
+    def validate(self, attrs):
+        self.token = attrs('refresh')
+        return attrs
+
+    
+    def save(self, **kwargs):
+        try:
+            RefreshToken(self.token).blacklist()
+        except TokenError:
+            self.fail('bad token')
