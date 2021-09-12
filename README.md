@@ -1,5 +1,7 @@
 # expensesapi
 
+### production link here.
+https://rajexpensesapi.herokuapp.com/
 This is sample project for including swagger doc as API testing, it has integrated with django and python and swagger functionality.  
 and it was deployed in heroku cloud as pipe line build, and integrated with docker as well.
 
