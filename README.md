@@ -1,3 +1,9 @@
+![expences-api](https://user-images.githubusercontent.com/42211472/132987120-4a35f7ab-2d2e-4e53-816c-422d79765397.jpg)
+![income-api](https://user-images.githubusercontent.com/42211472/132987139-ab528883-ca6f-499c-bdbd-1cfdee63cc45.jpg)
+![expences-api](https://user-images.githubusercontent.com/42211472/132987149-afb617e7-37aa-4a3c-b83c-e484ded77db9.jpg)
+![expences-api](https://user-images.githubusercontent.com/42211472/132987160-a1ba6aed-60fa-422e-98ed-f8eb52e6c747.jpg)
+![expences-api-2](https://user-images.githubusercontent.com/42211472/132987162-e8af8426-0d40-4499-b439-e2a1a5040baa.jpg)
+![income-api](https://user-images.githubusercontent.com/42211472/132987163-9e0a9228-d521-4230-9fc6-46dc37fb23db.jpg)
 # expensesapi
 
 ### production link here.
